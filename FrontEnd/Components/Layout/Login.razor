@@ -1,8 +1,25 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <a href="Account/Logout">Log out    </a>
+        @UserName &nbsp;&nbsp;
+        <a class="btn btn-primary" href="Account/Logout" role="button">Logout</a>                
     </Authorized>
-    <NotAuthorized>
-        <a href="Account/Login">Log in</a>
+    <NotAuthorized>        
+        <a class="btn btn-primary" href="Account/Login" role="button">Log in</a>        
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    private string UserName = "";
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationStateTask is not null)
+        {
+            var authState = await authenticationStateTask;
+            UserName = authState?.User?.Identity?.Name ?? "";
+            //For future reference to get the user id
+            string userId = authState?.User?.FindFirst(c => c.Type == "sub")?.Value ?? "";
+        }
+    }
+}
