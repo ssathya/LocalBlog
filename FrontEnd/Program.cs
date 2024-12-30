@@ -4,6 +4,8 @@ using FrontEnd.Components;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCascadingAuthenticationState();
@@ -21,6 +23,17 @@ builder.Services
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+//Database
+var blogConnectionString = builder.Configuration.GetConnectionString("BlogDbConnection");
+if (string.IsNullOrEmpty(blogConnectionString))
+{
+    throw new Exception("Configuration missing: ConnectionStrings:BlogDbConnection");
+}
+builder.Services.AddDbContext<BlogContext>(options =>
+{
+    options.UseNpgsql(blogConnectionString);
+});
 
 var app = builder.Build();
 
