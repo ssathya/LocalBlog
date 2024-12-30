@@ -60,6 +60,8 @@ else
         {
             var authState = await authenticationStateTask;
             UserName = authState?.User?.Identity?.Name ?? "";
+            //For future refrence to get the user id
+            string userId = authState?.User?.FindFirst(c => c.Type == "sub")?.Value ?? "";
         }
     }
 
