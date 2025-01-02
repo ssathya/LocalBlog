@@ -1,4 +1,5 @@
-﻿<AuthorizeView>
+﻿@using FrontEnd.Services;
+<AuthorizeView>
     <Authorized>
         @UserName &nbsp;&nbsp;
         <a class="btn btn-primary" href="Account/Logout" role="button">Logout</a>                
@@ -14,12 +15,6 @@
     private string UserName = "";
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationStateTask is not null)
-        {
-            var authState = await authenticationStateTask;
-            UserName = authState?.User?.Identity?.Name ?? "";
-            //For future reference to get the user id
-            string userId = authState?.User?.FindFirst(c => c.Type == "sub")?.Value ?? "";
-        }
+        UserName = (await UserDetails.GetUserDetails(authenticationStateTask)).UserName;        
     }
 }

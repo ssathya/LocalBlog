@@ -1,0 +1,60 @@
+﻿@page "/ManageCategories"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Manage Categories</h3>
+        @* <button class="btn btn-primary btn-sm ml-auto" @onclick="()=>categoryForm!.Open()">Add Category</button> *@
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Add Category
+        </button>
+    </div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Slug</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (loading)
+            {
+                <tr>
+                    <td colspan="4">
+                        Loading categories...
+                    </td>
+                </tr>
+            }
+            else if (categories == null || categories.Count() == 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        <b>No categories found</b>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                int srNo = 0;
+                foreach (var category in categories!)
+                {
+
+                    <tr>
+                        <td>@(++srNo)</td>
+                        <td>@category.Id</td>
+                        <td>@category.Name</td>
+                        <td>@category.Slug</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <CategoryForm Title="Some Title" CatToFill="CategoryToEdit"/>
+</div>
