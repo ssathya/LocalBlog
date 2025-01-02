@@ -45,4 +45,34 @@ public class CategoryService(BlogContext context, ILogger<CategoryService> logge
             return MethodResult.Fail($"Error saving category.\n{ex.Message}");
         }
     }
+
+    public async Task<Category?> GetCategoryByNameAsync(string name)
+    {
+        try
+        {
+            return await context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name.ToLower().Trim() == name.ToLower().Trim());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error obtaining category by name.\n{ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<Category?> GetCategoryBySlugAsync(string slug)
+    {
+        try
+        {
+            return await context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Slug.ToLower().Trim() == slug.ToLower().Trim());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error obtaining category by slug.\n{ex.Message}");
+            return null;
+        }
+    }
 }

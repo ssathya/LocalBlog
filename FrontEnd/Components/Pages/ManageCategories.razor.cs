@@ -23,6 +23,11 @@ public partial class ManageCategories
 
     protected override async Task OnInitializedAsync()
     {
+        await HandleCategoryChanged();
+    }
+
+    private async Task HandleCategoryChanged()
+    {
         loading = true;
         if (CategoryService is not null)
         {
@@ -30,5 +35,12 @@ public partial class ManageCategories
         }
         categories ??= [];
         loading = false;
+        StateHasChanged();
+    }
+
+    private EventCallback SetChildCategory(int id)
+    {
+        CategoryToEdit = categories!.FirstOrDefault(c => c.Id == id);
+        return EventCallback.Factory.Create(this, HandleCategoryChanged);
     }
 }
