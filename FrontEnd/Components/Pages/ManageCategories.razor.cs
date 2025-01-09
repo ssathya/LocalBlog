@@ -14,11 +14,17 @@ public partial class ManageCategories
     private bool loading = false;
     private CategoryForm? categoryForm;
     private Category? CategoryToEdit;
+    private bool renderCompleted = false;
 
     protected override void OnInitialized()
     {
         categoryForm ??= new();
         CategoryToEdit = null;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        renderCompleted = !firstRender;
     }
 
     protected override async Task OnInitializedAsync()
@@ -35,12 +41,20 @@ public partial class ManageCategories
         }
         categories ??= [];
         loading = false;
+        CategoryToEdit = new();
         StateHasChanged();
     }
 
     private EventCallback SetChildCategory(int id)
     {
-        CategoryToEdit = categories!.FirstOrDefault(c => c.Id == id);
-        return EventCallback.Factory.Create(this, HandleCategoryChanged);
+        if (renderCompleted)
+        {
+            CategoryToEdit = categories!.FirstOrDefault(c => c.Id == id);
+            return EventCallback.Factory.Create(this, HandleCategoryChanged);
+        }
+        else
+        {
+            return EventCallback.Factory.Create(this, () => CategoryToEdit = categories!.FirstOrDefault(c => c.Id == id));
+        }
     }
 }

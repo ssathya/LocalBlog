@@ -70,6 +70,7 @@ static void SetupDependencyInjection(WebApplicationBuilder builder)
 {
     builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
     builder.Services.AddScoped<CategoryService>();
+    builder.Services.AddScoped<BlogService>();
 }
 
 static void SetupDatabaseConnection(WebApplicationBuilder builder)

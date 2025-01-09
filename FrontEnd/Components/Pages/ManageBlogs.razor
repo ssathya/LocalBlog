@@ -1,0 +1,64 @@
+﻿@page "/ManageBlogs"
+@rendermode InteractiveServer
+
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Manage Blogs</h3>
+        <a href="/SaveBlog" class="btn btn-primary btn-sm">Create Blog</a>        
+    </div>
+    <hr />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Created</th>
+                <th>Published</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!IsLoading && Blogs != null && Blogs.Count() >= 1)
+            {
+                @foreach (var blogPost in Blogs)
+                {
+                    <tr>
+                        <td>@blogPost.Title</td>
+                        <td>@blogPost.CategoryName</td>
+                        <td>
+                            @(blogPost.ModifiedOn.HasValue ?
+                                blogPost.ModifiedOn.Value.ToString("d")
+                                : blogPost.CreatedOn.ToString("d")))
+                        </td>
+                        <td>
+                            @(blogPost.IsPublished ?
+                                blogPost.PublishedOn?.ToString("d")
+                                : "")
+                        </td>
+                        <td>
+                            <NavLink href="/SaveBlog/{blogPost.Id}" class="btn btn-primary btn-sm">Edit</NavLink>}                            
+                            @* <button class="btn btn-danger btn-sm">Delete</button> *@
+                        </td>
+                    </tr>
+                }
+            }
+            else if (!IsLoading && Blogs != null && Blogs.Count() == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">                        
+                        <NavLink href="/SaveBlog" class="btn btn-primary">Create first blog</NavLink>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-capitalize">Loading...</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

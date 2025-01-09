@@ -1,0 +1,81 @@
+﻿@page "/dummyCategory"
+@using Blazorise.DataGrid
+@using Models
+@using ModernBlog.Extensions
+@using ModernBlog.Services
+@rendermode InteractiveServer
+<h3>DummyCategory</h3>
+
+@* <Field>
+    <FieldLabel>
+        Edit Mode
+    </FieldLabel>
+    <FieldBody>
+        <Select @bind-SelectedValue="@editMode">
+            <SelectItem Value="DataGridEditMode.Form">Form</SelectItem>
+            <SelectItem Value="DataGridEditMode.Inline">Inline</SelectItem>
+            <SelectItem Value="DataGridEditMode.Popup">Popup</SelectItem>
+            <SelectItem Value="DataGridEditMode.Cell">Cell ("Rapid Editing")</SelectItem>
+        </Select>
+    </FieldBody>
+</Field> *@
+
+<DataGrid TItem="Category"
+Data="@Categories"
+@bind-SelectedRow="@selectedCategory"
+Editable
+Responsive          
+ShowPager
+PageSize="5"
+CommandMode="DataGridCommandMode.ButtonRow"
+EditMode="editMode">
+    <DataGridColumns>
+        <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false" CancelCommandAllowed>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Category.Id)" Caption="#" Sortable="false" />
+        <DataGridColumn Field="@nameof(Category.Name)" Caption="Name" Editable />
+        <DataGridColumn Field="@nameof(Category.Slug)" Caption="Slug" />
+    </DataGridColumns>
+    <ButtonRowTemplate>
+        <Button Color="Color.Primary" Clicked="context.NewCommand.Clicked">New</Button>
+        <Button Color="Color.Success" Clicked="@SaveChanges">Save</Button>
+        <Button Color="Color.Info" Disabled="(selectedCategory is null)" Clicked="context.EditCommand.Clicked">Edit</Button>        
+        @* <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Clear Filter</Button> *@
+    </ButtonRowTemplate>
+</DataGrid>
+
+@code {
+    [Inject]
+    public ICategoryService? CategoryService { get; set; }
+    public Category category { get; set; } = new();
+    private List<Category> Categories = [];
+    private Category selectedCategory = new();
+    private DataGridEditMode editMode = DataGridEditMode.Popup;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = (await CategoryService!.GetCategories()).ToList();
+    }
+    protected async Task SaveChanges()
+    {        
+        foreach (var category in Categories)
+        {
+            if (category.Id == 0)
+            {
+                category.Slug = category.Name.ManageSlug();
+                await CategoryService!.SaveCategoryInDb(category);
+            }            
+        }        
+    }
+    protected async Task UpdateRow(Category category)
+    {
+        await CategoryService!.SaveCategoryInDb(category);
+    }
+}

@@ -1,0 +1,37 @@
+﻿@page "/manageCategories"
+@using Blazorise.DataGrid
+@using Models
+@attribute [Authorize]
+@rendermode InteractiveServer
+<h3>Manage Categories</h3>
+
+<DataGrid TItem="Category"
+          Data="@Categories"
+          @bind-SelectedRow="@selectedCategory"
+          Editable
+          Responsive
+          ShowPager
+          PageSize="5"
+          CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="editMode">
+    <DataGridColumns>
+        <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false" CancelCommandAllowed>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Category.Id)" Caption="#" Sortable="false" />
+        <DataGridColumn Field="@nameof(Category.Name)" Caption="Name" Editable />
+        <DataGridColumn Field="@nameof(Category.Slug)" Caption="Slug" />
+    </DataGridColumns>
+    <ButtonRowTemplate>
+        <Button Color="Color.Primary" Clicked="context.NewCommand.Clicked">New</Button>
+        <Button Color="Color.Success" Clicked="@SaveChanges">Save</Button>
+        <Button Color="Color.Info" Disabled="(selectedCategory is null)" Clicked="context.EditCommand.Clicked">Edit</Button>
+        @* <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Clear Filter</Button> *@
+    </ButtonRowTemplate>
+</DataGrid>
+
