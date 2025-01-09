@@ -1,0 +1,40 @@
+﻿@page "/SaveBlog"
+@page "/SaveBlog/{id:int?}"
+@rendermode InteractiveServer
+<PageTitle>Create/Update Blog</PageTitle>
+<h3>SaveBlog</h3>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Save Blog</h3>
+        <NavLink href="/ManageBlogs" class="btn btn-primary btn-sm">Back</NavLink>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-12">
+            <EditForm Model="Blog" OnSubmit="SaveUpdates" FormName="BlogEntry">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="Title" class="form-label">Title: </label>
+                    <InputText @bind-Value="Blog.Title" class="form-control" id="Title" @onfocusout="UpdateSlug" />
+                    <ValidationMessage For="@(() => Blog.Title)" />
+                </div>
+                <div class="mb-3">
+                    <label for="Slug" class="form-label">Slug: </label>
+                    <InputText @bind-Value="Blog.Slug" class="form-control" id="Slug" />
+                    <ValidationMessage For="@(() => Blog.Slug)" />
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category: </label>
+                    <InputSelect @bind-Value="Blog.Category" class="form-control" id="category">
+                        <option value="">Select Category</option>
+                        @foreach (var category in Categories)
+                        {
+                            <option value="@category">@category.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>

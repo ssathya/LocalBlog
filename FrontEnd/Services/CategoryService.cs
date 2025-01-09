@@ -9,7 +9,7 @@ public class CategoryService(BlogContext context, ILogger<CategoryService> logge
     private readonly BlogContext context = context;
     private readonly ILogger<CategoryService> logger = logger;
 
-    public async Task<IEnumerable<Category>> GetCategoriesAsync()
+    public async Task<List<Category>> GetCategoriesAsync()
     {
         try
         {
@@ -21,28 +21,6 @@ public class CategoryService(BlogContext context, ILogger<CategoryService> logge
         {
             logger.LogError($"Error obtaining values from Categories table.\n{ex.Message}");
             return [];
-        }
-    }
-
-    public async Task<MethodResult> SaveCategoryInDbAsync(Category category)
-    {
-        try
-        {
-            if (category.Id == 0)
-            {
-                await context.Categories.AddAsync(category);
-            }
-            else
-            {
-                context.Categories.Update(category);
-            }
-            await context.SaveChangesAsync();
-            return MethodResult.Success();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"Error saving category.\n{ex.Message}");
-            return MethodResult.Fail($"Error saving category.\n{ex.Message}");
         }
     }
 
@@ -73,6 +51,28 @@ public class CategoryService(BlogContext context, ILogger<CategoryService> logge
         {
             logger.LogError($"Error obtaining category by slug.\n{ex.Message}");
             return null;
+        }
+    }
+
+    public async Task<MethodResult> SaveCategoryInDbAsync(Category category)
+    {
+        try
+        {
+            if (category.Id == 0)
+            {
+                await context.Categories.AddAsync(category);
+            }
+            else
+            {
+                context.Categories.Update(category);
+            }
+            await context.SaveChangesAsync();
+            return MethodResult.Success();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error saving category.\n{ex.Message}");
+            return MethodResult.Fail($"Error saving category.\n{ex.Message}");
         }
     }
 }

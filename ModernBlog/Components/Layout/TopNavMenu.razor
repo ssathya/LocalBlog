@@ -1,0 +1,36 @@
+﻿@rendermode InteractiveServer
+<Bar Breakpoint="Breakpoint.Desktop"
+     Background="Background.Light"
+     ThemeContrast="ThemeContrast.Light"
+     CollapseMode="BarCollapseMode.Small"
+     NavigationBreakpoint="Breakpoint.Tablet"
+     Margin="Margin.Is2.OnMobile.Is3.OnTablet">
+    <BarBrand>
+        Sridhar's Blog
+    </BarBrand>
+    <BarToggler />
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">Home</BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink To="/About">About</BarLink>
+            </BarItem>
+            <AuthorizeView Roles="Blog Owner">
+                <BarItem>
+                    <BarLink To="/ManageCategories">Manage Categories</BarLink>
+                </BarItem>
+                <BarItem>
+                    <BarLink To="/ManageBlogs">Manage Blogs</BarLink>
+                </BarItem>
+            </AuthorizeView>
+
+        </BarStart>
+        <BarEnd>
+            <BarItem>
+                <Login />
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>
