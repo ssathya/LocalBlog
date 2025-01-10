@@ -110,6 +110,7 @@ static void RegisterConnectionToDb(WebApplicationBuilder builder)
 static void RegisterServices(WebApplicationBuilder builder)
 {
     builder.Services.AddTransient<ICategoryService, CategoryService>();
+    builder.Services.AddTransient<IBlogCategoryService, BlogCategoryService>();
 }
 static void ConfigureLogging(WebApplicationBuilder builder)
 {

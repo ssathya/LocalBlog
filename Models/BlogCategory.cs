@@ -2,8 +2,11 @@
 
 namespace Models;
 
-public class BlogCategorie
+public class BlogCategory
 {
+    [JsonPropertyName("BlogId")]
+    public int BlogId { get; set; }
+
     [JsonPropertyName("Title")]
     public string Title { get; set; } = string.Empty;
 
