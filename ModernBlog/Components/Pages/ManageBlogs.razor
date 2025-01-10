@@ -1,0 +1,52 @@
+﻿@page "/manageBlogs"
+@using Blazorise.DataGrid
+@using Models
+@attribute [Authorize]
+@rendermode InteractiveServer
+<Grid Columns="GridColumns.Are2">
+    <Alert Visible Margin="Margin.Is2">
+        <h3>Manage Blogs</h3>
+    </Alert>
+    @* <Alert Margin="Margin.Is0" Visible="false">
+    </Alert> *@
+    <Alert Margin="Margin.Is2" Visible>
+        <Link href="/SaveBlog" Class="btn btn-primary">
+        Create New
+        </Link>
+    </Alert>
+</Grid>
+
+
+<DataGrid TItem="BlogCategory"
+          Data="@BlogCategories"
+          @bind-SelectedRow="@selectedBlogCategory"
+          Editable
+          Responsive
+          ShowPager
+          ShowPageSizes
+          Respopnsive
+          ResponsiveMode="TableResponsiveMode.Mobile"
+          PageSize="5"
+          Filterable="true"
+          RowDoubleClicked="(e=>EditBlog(e))"
+          FilterMode="DataGridFilterMode.Menu"
+          CommandMode="DataGridCommandMode.ButtonRow">
+    <DataGridColumns>
+
+        <DataGridColumn Field="@nameof(BlogCategory.Title)" Caption="Title" Sortable="true" />
+        <DataGridColumn Field="@nameof(BlogCategory.Introduction)" Caption="Introduction" Sortable="true" />
+        <DataGridColumn Field="@nameof(BlogCategory.CreatedOn)" Caption="Created/Updated On" Sortable="true">
+            <DisplayTemplate>
+                @{
+                    var date = (context as BlogCategory)?.ModifiedOn ?? (context as BlogCategory)?.CreatedOn;
+                    @($"{date:yyyy-MM-dd}")
+                }
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(BlogCategory.IsPublished)" Caption="Is Published" Sortable="true" />
+        <DataGridColumn Field="@nameof(BlogCategory.Name)" Caption="Category" Sortable="true" />
+    </DataGridColumns>
+
+</DataGrid>
+
+
