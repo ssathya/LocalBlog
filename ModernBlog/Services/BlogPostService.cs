@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.AppSpecific;
+using ModernBlog.Extensions;
 
 namespace ModernBlog.Services;
 
-public class BlogPostService(BlogContext context, ILogger<BlogPostService> logger) : IBlogPostService
+public class BlogPostService(BlogContext context, ILogger<BlogPostService> logger, AuthenticationStateProvider stateProvider) : IBlogPostService
 {
     private readonly BlogContext context = context;
     private readonly ILogger<BlogPostService> logger = logger;
+    private readonly AuthenticationStateProvider stateProvider = stateProvider;
 
     public async Task<BlogPost?> GetPostByIdAsync(int id)
     {
@@ -24,11 +27,18 @@ public class BlogPostService(BlogContext context, ILogger<BlogPostService> logge
 
     public async Task<MethodResult> CreateOrUpdateBlogPostAsync(BlogPost post)
     {
+        var authState = await stateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            post.UserId = user.Identity.Name;
+        }
         try
         {
             if (post.Id == 0)
             {
                 post.CreatedOn = DateTime.UtcNow;
+                post.Slug = post.Title.ManageSlug();
                 await context.BlogPosts.AddAsync(post);
             }
             else

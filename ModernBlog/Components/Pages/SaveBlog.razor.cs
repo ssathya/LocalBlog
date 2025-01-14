@@ -7,29 +7,64 @@ namespace ModernBlog.Components.Pages;
 
 public partial class SaveBlog
 {
-    [Parameter]
-    public int? Id { get; set; }
+    protected Markdown markdownRef = new();
 
-    private int BlogId => Id ?? 0;
+    private string initialMarkdownValue = string.Empty;
 
     [Inject]
     public IBlogPostService? BlgPstSvc { get; set; }
 
+    public BlogPost BlogPost { get; set; } = new();
+
+    public List<Category> Categories { get; set; } = new();
+
     [Inject]
     public ICategoryService? CtgSvc { get; set; }
+
+    [Parameter]
+    public int? Id { get; set; }
 
     [Inject]
     public ILogger<SaveBlog>? Logger { get; set; }
 
-    public BlogPost BlogPost { get; set; } = new();
-    public List<Category> Categories { get; set; } = new();
-    public Category SelectedCategory { get; set; } = new();
-    protected Markdown markdownRef = new();
-    private string initialMarkdownValue = string.Empty;
-    protected bool hasValueChanged = false;
-
     [Inject]
     public NavigationManager? NavigationManager { get; set; }
+
+    public Category SelectedCategory { get; set; } = new();
+
+    private int BlogId => Id ?? 0;
+
+    protected async Task DeleteBlog()
+    {
+        if (BlgPstSvc is null)
+        {
+            Logger!.LogCritical("BlgPstSvc is null");
+            throw new ArgumentNullException(nameof(BlgPstSvc));
+        }
+        if (BlogPost.Id > 0)
+        {
+            await BlgPstSvc.DeleteBlogPostAsync(BlogPost.Id);
+        }
+        NavigationManager!.NavigateTo("/manageBlogs");
+    }
+
+    protected string GetSelectedCategoryName()
+    {
+        if (Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId) is null)
+        {
+            return "Select a category";
+        }
+        else
+        {
+            if (BlogPost.CategoryId == SelectedCategory.Id)
+            {
+                return SelectedCategory.Name;
+            }
+
+            SelectedCategory = Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId)!;
+            return Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId)!.Name;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,6 +74,29 @@ public partial class SaveBlog
         }
         await PopulateExistingBlog();
         await PopulateCategories();
+    }
+
+    protected async Task SaveButtonClicked(bool isSave)
+    {
+        if (BlgPstSvc is null)
+        {
+            throw new ArgumentNullException(nameof(BlgPstSvc));
+        }
+        if (isSave)
+        {
+            if (BlogPost.IsPublished && BlogPost.PublishedOn == null)
+            {
+                BlogPost.PublishedOn = DateTime.UtcNow;
+            }
+            if (!BlogPost.IsPublished)
+            {
+                BlogPost.PublishedOn = null;
+            }
+            BlogPost.Content = await markdownRef.GetValueAsync();
+            BlogPost.CategoryId = SelectedCategory.Id;
+            await BlgPstSvc.CreateOrUpdateBlogPostAsync(BlogPost);
+        }
+        NavigationManager!.NavigateTo("/manageBlogs");
     }
 
     private async Task PopulateCategories()
@@ -79,44 +137,5 @@ public partial class SaveBlog
                 NavigationManager!.NavigateTo("/errorPage");
             }
         }
-    }
-
-    protected string GetSelectedCategoryName()
-    {
-        if (Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId) is null)
-        {
-            return "Select a category";
-        }
-        else
-        {
-            if (BlogPost.CategoryId == SelectedCategory.Id)
-            {
-                return SelectedCategory.Name;
-            }
-            hasValueChanged = true;
-            SelectedCategory = Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId)!;
-            return Categories.FirstOrDefault(c => c.Id == BlogPost.CategoryId)!.Name;
-        }
-    }
-
-    protected Task OnMarkdownValueChanged(string value)
-    {
-        hasValueChanged = !initialMarkdownValue.Equals(value);
-        return Task.CompletedTask;
-    }
-
-    protected async Task ButtonClicked(bool isSave)
-    {
-        if (BlgPstSvc is null)
-        {
-            throw new ArgumentNullException(nameof(BlgPstSvc));
-        }
-        if (isSave)
-        {
-            BlogPost.Content = await markdownRef.GetValueAsync();
-            BlogPost.CategoryId = SelectedCategory.Id;
-            await BlgPstSvc.CreateOrUpdateBlogPostAsync(BlogPost);
-        }
-        NavigationManager!.NavigateTo("/manageBlogs");
     }
 }

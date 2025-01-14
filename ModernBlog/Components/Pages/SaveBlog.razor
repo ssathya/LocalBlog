@@ -2,6 +2,7 @@
 @page "/SaveBlog/{id:int?}"
 @using Models
 @rendermode InteractiveServer
+@attribute [Authorize(Roles = "Blog Owner")]
 <h3>Manage A Blog</h3>
 
 <Row>
@@ -60,16 +61,19 @@
                           Value="@BlogPost.Content">
                 </Markdown>
             </Row>
-            <Row TextAlignment="TextAlignment.Center">
-                <Column></Column>
+            <Row TextAlignment="TextAlignment.Center">                
                 <Column>
-                    <Button Color="Color.Success" Clicked="()=>ButtonClicked(true)">Save</Button>
+                    <Button Color="Color.Success" Clicked="()=>SaveButtonClicked(true)">Save</Button>
+                </Column>                
+                <Column>
+                    <Button Color="Color.Warning" Clicked="()=>SaveButtonClicked(false)">Cancel</Button>
+                </Column>       
+                <Column>
+                    <Button Color="Color.Danger" Clicked="()=>DeleteBlog()">Delete</Button>
                 </Column>
-                <Column></Column>
                 <Column>
-                    <Button Color="Color.Danger" Clicked="()=>ButtonClicked(false)">Cancel</Button>
-                </Column>                        
-                <Column></Column>
+                    <Switch TValue="bool" @bind-Checked="@BlogPost.IsPublished">Published</Switch>
+                </Column>
             </Row>
         </CardBody>
     </Card>
