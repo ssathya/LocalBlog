@@ -30,3 +30,22 @@ public class BlogContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 }
+
+/*
+ * The SQL that is used to create the view is as follows:
+ * -- public."BlogCategories" source
+
+CREATE OR REPLACE VIEW public."BlogCategories"
+AS SELECT bp."Id" AS "BlogId",
+    bp."Title",
+    bp."Introduction",
+    c."Name",
+    bp."IsPublished",
+    bp."CreatedOn",
+    bp."PublishedOn",
+    bp."ModifiedOn"
+   FROM "BlogPosts" bp,
+    "Categories" c
+  WHERE c."Id" = bp."CategoryId";
+
+ */

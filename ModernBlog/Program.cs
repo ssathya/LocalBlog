@@ -111,6 +111,7 @@ static void RegisterServices(WebApplicationBuilder builder)
 {
     builder.Services.AddTransient<ICategoryService, CategoryService>();
     builder.Services.AddTransient<IBlogCategoryService, BlogCategoryService>();
+    builder.Services.AddTransient<IBlogPostService, BlogPostService>();
 }
 static void ConfigureLogging(WebApplicationBuilder builder)
 {

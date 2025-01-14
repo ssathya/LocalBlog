@@ -1,0 +1,80 @@
+﻿@page "/SaveBlog"
+@page "/SaveBlog/{id:int?}"
+@using Models
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "Blog Owner")]
+<h3>Manage A Blog</h3>
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is8">
+    </Column>
+    <Column ColumnSize="ColumnSize.Is4">
+        <Link href="/manageBlogs"><Button Color="Color.Primary">Back to blog list</Button></Link>
+    </Column>
+</Row>
+<Row>
+    <Card Margin="Margin.Is4.OnY">
+        <CardTitle>
+            <Field Horizontal>
+                <FieldLabel RequiredIndicator ColumnSize="ColumnSize.IsFull.OnTablet.Is3.OnDesktop">Title</FieldLabel>
+                <FieldBody ColumnSize="ColumnSize.IsFull">
+                    <TextEdit Autofocus Placeholder="Title" @bind-Text="BlogPost.Title">
+                        <Feedback>
+                            <ValidationError>Enter a blog title</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </CardTitle>
+        <CardBody>
+            <Row>
+                <Field>
+                    <FieldLabel RequiredIndicator ColumnSize="ColumnSize.IsFull.OnTablet.Is3.OnDesktop">Introduction</FieldLabel>
+                </Field>
+                <FieldBody ColumnSize="ColumnSize.IsFull.OnTablet.Is9.OnDesktop">
+                    <MemoEdit Rows="5" @bind-Text="BlogPost.Introduction">
+                        <Feedback>
+                            <ValidationError>Enter a blog introduction</ValidationError>
+                        </Feedback>
+                    </MemoEdit>
+                </FieldBody>
+            </Row>
+            <Row>
+                <Field>
+                    <FieldLabel RequiredIndicator>Category</FieldLabel>
+                    <DropdownList TItem="Category" TValue="int"
+                                  Data="@Categories"
+                                  TextField="@((item)=>item.Name)"
+                                  ValueField="@((item)=>item.Id)"
+                                  @bind-SelectedValue="@BlogPost.CategoryId"
+                                  MaxMenuHeight="200px">
+                        @GetSelectedCategoryName()
+                    </DropdownList>
+                    @*                     <FieldBody ColumnSize="ColumnSize.Is12">
+                        Category: @GetSelectedCategoryName()
+                    </FieldBody> *@
+                </Field>
+            </Row>
+            <Row>
+                <Markdown @ref="@markdownRef"
+                         @*  ValueChanged="@OnMarkdownValueChanged" *@
+                          Value="@BlogPost.Content">
+                </Markdown>
+            </Row>
+            <Row TextAlignment="TextAlignment.Center">                
+                <Column>
+                    <Button Color="Color.Success" Clicked="()=>SaveButtonClicked(true)">Save</Button>
+                </Column>                
+                <Column>
+                    <Button Color="Color.Warning" Clicked="()=>SaveButtonClicked(false)">Cancel</Button>
+                </Column>       
+                <Column>
+                    <Button Color="Color.Danger" Clicked="()=>DeleteBlog()">Delete</Button>
+                </Column>
+                <Column>
+                    <Switch TValue="bool" @bind-Checked="@BlogPost.IsPublished">Published</Switch>
+                </Column>
+            </Row>
+        </CardBody>
+    </Card>
+</Row>
