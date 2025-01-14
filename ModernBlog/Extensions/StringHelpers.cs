@@ -12,4 +12,12 @@ public static class StringHelpers
             .Trim('-');
         return newSlug;
     }
+
+    public static string Truncate(this string value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value)) return value;
+        return maxLength < 5 && value.Length > maxLength
+            ? value.Substring(0, maxLength)
+            : value.Length <= maxLength ? value : value.Substring(0, maxLength - 3) + "...";
+    }
 }

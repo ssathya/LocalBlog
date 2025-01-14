@@ -1,7 +1,46 @@
 ﻿@page "/"
-
+@using Models
+@using Extensions
+@rendermode InteractiveServer
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+
+<Paragraph Margin="Margin.Is3.OnTablet">
+    Here is the list of published blogs. We encourage you to explore and enjoy the blogs at your leisure. Please note
+    that commenting is currently disabled, but we will be introducing the ability for user comments in the near future.
+    Stay tuned.
+</Paragraph>
+<Row Flex="Flex.JustifyContent.Center">
+    <Column ColumnSize="ColumnSize.Is8.OnTablet.Is8.OnWidescreen.Is12.OnMobile">
+        <DataGrid TItem="BlogCategory"
+                  Data="@blogPosts"
+                  @bind-SelectedRow="@selectedBlog"
+                  Responsive
+                  PageSize="10"
+                  FixedHeader
+                  ShowPager
+                  ShowPageSizes
+                  RowDoubleClicked="(e=>DisplayBlog(e))"
+                  CommandMode="DataGridCommandMode.ButtonRow"
+                  FixedHeaderDataGridMaxHeight="300px">
+            <DataGridColumn Field="@nameof(BlogCategory.Name)" Caption="Category" Sortable="true" />
+            <DataGridColumn Field="@nameof(BlogCategory.Title)" Caption="Title" Sortable="true">
+                <DisplayTemplate>
+                    @{
+                        var data = (context as BlogCategory)?.Title;
+                        @($"{data!.Truncate(30)}")
+                    }
+                </DisplayTemplate>
+            </DataGridColumn>
+            <DataGridColumn Field="@nameof(BlogCategory.Introduction)" Caption="Introduction">
+                <DisplayTemplate>
+                    @{
+                        var data = (context as BlogCategory)?.Introduction;
+                        @($"{data!.Truncate(120)}")
+                    }
+                </DisplayTemplate>
+            </DataGridColumn>
+        </DataGrid>
+    </Column>
+</Row>
