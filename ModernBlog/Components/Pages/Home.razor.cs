@@ -36,6 +36,10 @@ public partial class Home
         try
         {
             blogPosts = (await BlogCatSvc.GetAllCategoriesAsync()) ?? [];
+            blogPosts = (from blogPost in blogPosts
+                         where blogPost.IsPublished
+                         select blogPost)
+                        .ToList();
         }
         catch (Exception ex)
         {
