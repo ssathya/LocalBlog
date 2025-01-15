@@ -29,6 +29,8 @@ public class BlogPostService(BlogContext context, ILogger<BlogPostService> logge
     {
         var authState = await stateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+        post.Title = post.Title.Truncate(120);
+        post.Introduction = post.Introduction.Truncate(255);
         if (user.Identity?.IsAuthenticated == true)
         {
             post.UserId = user.Identity.Name;
