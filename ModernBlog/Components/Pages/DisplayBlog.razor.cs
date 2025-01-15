@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.OutputCaching;
 using Models;
 using ModernBlog.Services;
 
 namespace ModernBlog.Components.Pages;
 
+[OutputCache]
 public partial class DisplayBlog
 {
     [Parameter]

@@ -21,6 +21,14 @@ RegisterAuth0(builder);
 RegisterConnectionToDb(builder);
 
 RegisterServices(builder);
+builder.Services.AddOutputCache(cfg =>
+{
+    cfg.AddBasePolicy(bldr =>
+    {
+        bldr.With(r => r.HttpContext.Request.Path.StartsWithSegments("/"));
+        bldr.Expire(TimeSpan.FromMinutes(1));
+    });
+});
 
 builder.Services
     .AddBlazorise(options =>
@@ -49,6 +57,7 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 RegisterAuth0Routes(app);
+app.UseOutputCache();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
