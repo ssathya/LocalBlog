@@ -128,7 +128,7 @@ static void ConfigureLogging(WebApplicationBuilder builder)
     var config = builder.Configuration;
     StringBuilder filePath = new();
     filePath.Append(Path.GetTempPath() + "/");
-    filePath.Append("BlazorChat-.log");
+    filePath.Append("ModernBlog-.log");
     Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(config)
         .Enrich.FromLogContext()
