@@ -33,9 +33,9 @@ public partial class ManageBlogs
         BlogCategories = (await BlogCategoryService.GetAllCategoriesAsync()) ?? [];
     }
 
-    protected void EditBlog(DataGridRowMouseEventArgs<BlogCategory> blogCategoryevent)
+    protected void EditBlog(DataGridRowMouseEventArgs<BlogCategory> blogCategoryEvent)
     {
-        int blogCategoryId = blogCategoryevent.Item.BlogId;
+        int blogCategoryId = blogCategoryEvent.Item.BlogId;
         if (NavigationManager is null)
         {
             Logger!.LogError("NavigationManager is null.");

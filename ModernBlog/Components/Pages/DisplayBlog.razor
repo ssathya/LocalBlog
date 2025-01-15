@@ -1,0 +1,19 @@
+﻿@page "/displayBlog/{id:int?}"
+@using Blazorise
+<Heading Size="HeadingSize.Is1" >
+    @BlgPst.Title
+</Heading>
+
+<Div Margin="Margin.Is3.OnTablet">
+    <Card Margin="Margin.Is4.FromBottom">
+    <CardHeader>
+        @BlgPst.Introduction
+    </CardHeader>
+    <CardText>
+            @((MarkupString)markdownHtml)
+    </CardText>
+    <CardFooter>
+            @((MarkupString)FooterGenerator())
+    </CardFooter>
+    </Card>
+</Div>
