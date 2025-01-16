@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.AppSpecific;
 using ModernBlog.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace ModernBlog.Services;
 
@@ -29,8 +30,22 @@ public class BlogPostService(BlogContext context, ILogger<BlogPostService> logge
     {
         var authState = await stateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        post.Title = post.Title.Truncate(120);
-        post.Introduction = post.Introduction.Truncate(255);
+
+        int? titleMaxLength = (Attribute.GetCustomAttribute(post.GetType().GetProperty(nameof(post.Title))!,
+            typeof(MaxLengthAttribute)) as MaxLengthAttribute)?.Length;
+        if (titleMaxLength is null)
+        {
+            return new MethodResult(false, "Title attribute not found.");
+        }
+        post.Title = post.Title.Truncate(titleMaxLength.Value);
+        int? introMaxLength = (Attribute.GetCustomAttribute(post.GetType().GetProperty(nameof(post.Introduction))!,
+            typeof(MaxLengthAttribute)) as MaxLengthAttribute)?.Length;
+        if (introMaxLength is null)
+        {
+            return new MethodResult(false, "Introduction attribute not found.");
+        }
+        post.Introduction = post.Introduction.Truncate(introMaxLength.Value);
+
         if (user.Identity?.IsAuthenticated == true)
         {
             post.UserId = user.Identity.Name;

@@ -8,13 +8,13 @@ public class BlogPost
     [Key]
     public int Id { get; set; }
 
-    [Required, MaxLength(120)]
+    [Required, MaxLength(255)]
     public string Title { get; set; } = string.Empty;
 
-    [Required, MaxLength(125)]
+    [Required, MaxLength(255)]
     public string Slug { get; set; } = string.Empty;
 
-    [Required, MaxLength(255)]
+    [Required, MaxLength(2047)]
     public string Introduction { get; set; } = string.Empty;
 
     [Required]
