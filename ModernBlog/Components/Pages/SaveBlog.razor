@@ -78,3 +78,28 @@
         </CardBody>
     </Card>
 </Row>
+@if (errorFlags.HasFlag(ErrorFlags.NoTitle))
+{
+    <Paragraph TextColor="TextColor.Danger">
+        The title needs to be at least 10 characters long and not longer than 255 characters!
+        </Paragraph>
+}
+@if (errorFlags.HasFlag(ErrorFlags.NoIntroduction))
+{
+    <Paragraph TextColor="TextColor.Danger">
+        The Introduction needs to be at least 50 characters long and not longer than 2048 characters!
+    </Paragraph>
+}
+@if(errorFlags.HasFlag(ErrorFlags.NoCategory))
+{
+    <Paragraph TextColor="TextColor.Danger">
+        Please select a category from the drop down menu!
+    </Paragraph>
+}
+@if(errorFlags.HasFlag(ErrorFlags.NoContent))
+{
+    <Paragraph TextColor="TextColor.Danger">
+        There needs to be some content for a blog!
+    </Paragraph>
+}
+
