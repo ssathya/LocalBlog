@@ -54,8 +54,8 @@ public partial class DisplayBlog
     protected string FooterGenerator()
     {
         DateTime refDate = BlgPst.ModifiedOn ?? BlgPst.CreatedOn;
-        return $"Created/Modified on{refDate:MM/dd/yyyy} &emsp; " +
-            $"Created by {BlgPst.UserId} &emsp;" +
-            $" Published on {BlgPst.PublishedOn:MM/dd/yyyy}";
+        return $"Created/Modified on &nbsp;{refDate:MM/dd/yyyy} &emsp; " +
+            $"Created by &nbsp; {BlgPst.UserId} &emsp;" +
+            $" Published on &nbsp;{BlgPst.PublishedOn:MM/dd/yyyy}";
     }
 }

@@ -2,8 +2,19 @@
 using Microsoft.AspNetCore.Components;
 using Models;
 using ModernBlog.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace ModernBlog.Components.Pages;
+
+[Flags]
+public enum ErrorFlags
+{
+    None = 0,
+    NoTitle = 1,
+    NoIntroduction = 2,
+    NoCategory = 4,
+    NoContent = 8
+}
 
 public partial class SaveBlog
 {
@@ -33,6 +44,7 @@ public partial class SaveBlog
     public Category SelectedCategory { get; set; } = new();
 
     private int BlogId => Id ?? 0;
+    protected ErrorFlags errorFlags = ErrorFlags.None;
 
     protected async Task DeleteBlog()
     {
@@ -84,6 +96,13 @@ public partial class SaveBlog
         }
         if (isSave)
         {
+            BlogPost.Content = await markdownRef.GetValueAsync();
+            bool isValid = IsContentValid();
+            if (!isValid)
+            {
+                Logger!.LogWarning("Content is not valid");
+                return;
+            }
             if (BlogPost.IsPublished && BlogPost.PublishedOn == null)
             {
                 BlogPost.PublishedOn = DateTime.UtcNow;
@@ -92,7 +111,6 @@ public partial class SaveBlog
             {
                 BlogPost.PublishedOn = null;
             }
-            BlogPost.Content = await markdownRef.GetValueAsync();
             BlogPost.CategoryId = SelectedCategory.Id;
             await BlgPstSvc.CreateOrUpdateBlogPostAsync(BlogPost);
         }
@@ -137,5 +155,38 @@ public partial class SaveBlog
                 NavigationManager!.NavigateTo("/errorPage");
             }
         }
+    }
+
+    private bool IsContentValid()
+    {
+        errorFlags = ErrorFlags.None;
+        bool isValid = true;
+        if (string.IsNullOrEmpty(BlogPost.Title)
+            || BlogPost.Title.Length >
+            ((Attribute.GetCustomAttribute(BlogPost.GetType().GetProperty(nameof(BlogPost.Title))!,
+            typeof(MaxLengthAttribute)) as MaxLengthAttribute)?.Length ?? 255))
+        {
+            errorFlags |= ErrorFlags.NoTitle;
+            isValid = false;
+        }
+        if (string.IsNullOrEmpty(BlogPost.Introduction)
+            || BlogPost.Title.Length >
+            ((Attribute.GetCustomAttribute(BlogPost.GetType().GetProperty(nameof(BlogPost.Introduction))!,
+            typeof(MaxLengthAttribute)) as MaxLengthAttribute)?.Length ?? 255))
+        {
+            errorFlags |= ErrorFlags.NoIntroduction;
+            isValid = false;
+        }
+        if (string.IsNullOrEmpty(BlogPost.Content))
+        {
+            errorFlags |= ErrorFlags.NoContent;
+            isValid = false;
+        }
+        if (SelectedCategory.Id == 0)
+        {
+            errorFlags |= ErrorFlags.NoCategory;
+            isValid = false;
+        }
+        return isValid;
     }
 }
