@@ -8,19 +8,20 @@
 
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.1" />
-    <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.2" />
-    <PackageReference Include="Blazorise.Components" Version="1.7.2" />
-    <PackageReference Include="Blazorise.DataGrid" Version="1.7.2" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.2" />
-    <PackageReference Include="Blazorise.Markdown" Version="1.7.2" />
+    <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.3" />
+    <PackageReference Include="Blazorise.Components" Version="1.7.3" />
+    <PackageReference Include="Blazorise.DataGrid" Version="1.7.3" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.3" />
+    <PackageReference Include="Blazorise.Markdown" Version="1.7.3" />
     <PackageReference Include="Markdig" Version="0.40.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.1.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.1-dev-02317" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
   </ItemGroup>

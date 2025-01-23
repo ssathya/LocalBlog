@@ -1,0 +1,33 @@
+﻿@page "/BlogGenerator"
+@rendermode InteractiveServer
+<h3>BlogGenerator</h3>
+
+<Card>
+    <CardBody>
+        <CardTitle Size="3">
+            Blog Generator
+        </CardTitle>
+        <CardHeader>
+            <MemoEdit Rows="5" @bind-Text="@ideas" />
+            <Div Margin="Margin.Is1.OnMobile.Is2.OnDesktop" Flex="Flex.JustifyContent.Center">
+                @if(IsGenerating == false)
+                {
+                    <Button Color="Color.Primary" Clicked="@OnButtonClicked">Generate</Button>
+                }
+                else{
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                }
+            </Div>
+        </CardHeader>
+        <CardText>
+            <Div Margin="Margin.Is1.OnMobile.Is2.OnDesktop">
+                <MemoEdit Rows="6" @bind-Text="@Introduction" />
+            </Div>
+            <Div Margin="Margin.Is1.OnMobile.Is2.OnDesktop">
+                <MemoEdit Rows="15" @bind-Text="@blog" />
+            </Div>
+        </CardText>
+    </CardBody>
+</Card>
