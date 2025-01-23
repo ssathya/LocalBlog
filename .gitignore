@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /FrontEnd/appsettings.Development.json
 /ModernBlog/appsettings.Development.json
+/GeminiAI
+/OllamaSharpMe
