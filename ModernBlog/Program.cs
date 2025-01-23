@@ -118,9 +118,10 @@ static void RegisterConnectionToDb(WebApplicationBuilder builder)
 
 static void RegisterServices(WebApplicationBuilder builder)
 {
-    builder.Services.AddTransient<ICategoryService, CategoryService>();
+    builder.Services.AddSingleton<IAiHandler, AiHandler>();
     builder.Services.AddTransient<IBlogCategoryService, BlogCategoryService>();
     builder.Services.AddTransient<IBlogPostService, BlogPostService>();
+    builder.Services.AddTransient<ICategoryService, CategoryService>();
 }
 static void ConfigureLogging(WebApplicationBuilder builder)
 {

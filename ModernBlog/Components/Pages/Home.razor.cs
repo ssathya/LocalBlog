@@ -21,6 +21,8 @@ public partial class Home
     [Inject]
     public NavigationManager? NavMgr { get; set; }
 
+    private const int introductionMaxLength = 256;
+
     protected override async Task OnInitializedAsync()
     {
         if (Logger is null)

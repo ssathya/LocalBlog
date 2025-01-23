@@ -37,7 +37,7 @@
                 <DisplayTemplate>
                     @{
                         var data = (context as BlogCategory)?.Introduction;
-                        @($"{data!.Truncate(120)}")
+                        @($"{data!.Truncate(introductionMaxLength)}")
                     }
                 </DisplayTemplate>
             </DataGridColumn>

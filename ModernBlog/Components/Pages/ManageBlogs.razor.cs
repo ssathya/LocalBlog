@@ -1,4 +1,5 @@
 ﻿using Blazorise.DataGrid;
+using Humanizer;
 using Microsoft.AspNetCore.Components;
 using Models;
 using ModernBlog.Services;
@@ -18,6 +19,7 @@ public partial class ManageBlogs
 
     private List<BlogCategory> BlogCategories = [];
     private BlogCategory selectedBlogCategory = new();
+    private const int introductionMaxLength = 256;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +33,10 @@ public partial class ManageBlogs
             throw new ArgumentNullException(nameof(BlogCategoryService));
         }
         BlogCategories = (await BlogCategoryService.GetAllCategoriesAsync()) ?? [];
+        foreach (var blogCategory in BlogCategories)
+        {
+            blogCategory.Introduction = blogCategory.Introduction.Truncate(introductionMaxLength);
+        }
     }
 
     protected void EditBlog(DataGridRowMouseEventArgs<BlogCategory> blogCategoryEvent)

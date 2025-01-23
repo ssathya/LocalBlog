@@ -5,6 +5,12 @@
 @attribute [Authorize(Roles = "Blog Owner")]
 <h3>Manage A Blog</h3>
 
+<Modal @bind-Visible="@modalVisible">
+    <ModalContent Size="ModalSize.Fullscreen">
+        <CloseButton />
+        <BlogGenerator @bind-ParentIntroduction="@BlogPost.Introduction" @bind-ParentBlog="@BlogPost.Content" />
+    </ModalContent>
+</Modal>
 <Row>
     <Column ColumnSize="ColumnSize.Is8">
     </Column>
@@ -57,22 +63,25 @@
             </Row>
             <Row>
                 <Markdown @ref="@markdownRef"
-                         @*  ValueChanged="@OnMarkdownValueChanged" *@
+                          @* ValueChanged="@OnMarkdownValueChanged" *@
                           Value="@BlogPost.Content">
                 </Markdown>
             </Row>
-            <Row TextAlignment="TextAlignment.Center">                
+            <Row TextAlignment="TextAlignment.Center">
                 <Column>
                     <Button Color="Color.Success" Clicked="()=>SaveButtonClicked(true)">Save</Button>
-                </Column>                
+                </Column>
                 <Column>
                     <Button Color="Color.Warning" Clicked="()=>SaveButtonClicked(false)">Cancel</Button>
-                </Column>       
+                </Column>
                 <Column>
                     <Button Color="Color.Danger" Clicked="()=>DeleteBlog()">Delete</Button>
                 </Column>
                 <Column>
                     <Switch TValue="bool" @bind-Checked="@BlogPost.IsPublished">Published</Switch>
+                </Column>
+                <Column>
+                    <Button Color="Color.Primary" Clicked="()=>LaunchAiHelp()">AI Help</Button>
                 </Column>
             </Row>
         </CardBody>
@@ -82,7 +91,7 @@
 {
     <Paragraph TextColor="TextColor.Danger">
         The title needs to be at least 10 characters long and not longer than 255 characters!
-        </Paragraph>
+    </Paragraph>
 }
 @if (errorFlags.HasFlag(ErrorFlags.NoIntroduction))
 {
@@ -90,13 +99,13 @@
         The Introduction needs to be at least 50 characters long and not longer than 2048 characters!
     </Paragraph>
 }
-@if(errorFlags.HasFlag(ErrorFlags.NoCategory))
+@if (errorFlags.HasFlag(ErrorFlags.NoCategory))
 {
     <Paragraph TextColor="TextColor.Danger">
         Please select a category from the drop down menu!
     </Paragraph>
 }
-@if(errorFlags.HasFlag(ErrorFlags.NoContent))
+@if (errorFlags.HasFlag(ErrorFlags.NoContent))
 {
     <Paragraph TextColor="TextColor.Danger">
         There needs to be some content for a blog!

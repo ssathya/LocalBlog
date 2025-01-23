@@ -1,4 +1,5 @@
-﻿using Blazorise.Markdown;
+﻿using Blazorise;
+using Blazorise.Markdown;
 using Microsoft.AspNetCore.Components;
 using Models;
 using ModernBlog.Services;
@@ -45,6 +46,7 @@ public partial class SaveBlog
 
     private int BlogId => Id ?? 0;
     protected ErrorFlags errorFlags = ErrorFlags.None;
+    private bool modalVisible;
 
     protected async Task DeleteBlog()
     {
@@ -188,5 +190,11 @@ public partial class SaveBlog
             isValid = false;
         }
         return isValid;
+    }
+
+    protected Task LaunchAiHelp()
+    {
+        modalVisible = true;
+        return Task.CompletedTask;
     }
 }
